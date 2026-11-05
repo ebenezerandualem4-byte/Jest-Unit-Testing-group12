@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Jest Unit Testing - Practical Laboratory Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 15mm 20mm 15mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #22252a;
+      line-height: 1.5;
+      font-size: 10pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    .cover-page {
+      page-break-after: always;
+      text-align: center;
+      padding-top: 80px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cover-header h1 {
+      font-size: 26pt;
+      color: #1a365d;
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .cover-header h2 {
+      font-size: 15pt;
+      color: #4a5568;
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: #edf2f7;
+      color: #2b6cb0;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 11pt;
+      font-weight: 600;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .members-card {
+      margin: 40px auto;
+      width: 85%;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .members-card table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    .members-card th {
+      background: #2b6cb0;
+      color: #ffffff;
+      padding: 10px 14px;
+      font-size: 10.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .members-card td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 10.5pt;
+    }
+
+    .cover-footer {
+      color: #718096;
+      font-size: 9.5pt;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 15px;
+      margin-top: 40px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    h2.section-title {
+      color: #1a365d;
+      border-bottom: 2px solid #2b6cb0;
+      padding-bottom: 6px;
+      font-size: 14pt;
+      margin-top: 25px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3.sub-title {
+      color: #2b6cb0;
+      font-size: 11.5pt;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px 0;
+      font-size: 8.5pt;
+      page-break-inside: auto;
+    }
+
+    table.data-table tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    table.data-table th {
+      background: #2d3748;
+      color: #ffffff;
+      padding: 5px 7px;
+      border: 1px solid #cbd5e0;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    table.data-table td {
+      padding: 4px 7px;
+      border: 1px solid #cbd5e0;
+      vertical-align: top;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background-color: #f7fafc;
+    }
+
+    .status-pass {
+      font-weight: bold;
+      color: #22543d;
+      background-color: #c6f6d5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .status-fail {
+      font-weight: bold;
+      color: #742a2a;
+      background-color: #fed7d7;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .status-killed {
+      font-weight: bold;
+      color: #234e52;
+      background-color: #b2f5ea;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .status-survived {
+      font-weight: bold;
+      color: #7b341e;
+      background-color: #feebc8;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    pre, code {
+      font-family: "Consolas", "Courier New", Courier, monospace;
+      font-size: 8.5pt;
+    }
+
+    code {
+      background-color: #edf2f7;
+      color: #2d3748;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background-color: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #2b6cb0;
+      padding: 8px 12px;
+      overflow-x: auto;
+      margin: 8px 0 12px 0;
+      line-height: 1.35;
+    }
+
+    .summary-box {
+      background-color: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #3182ce;
+      padding: 10px 14px;
+      margin: 12px 0 16px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .metrics-grid {
+      display: table;
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .metric-cell {
+      display: table-cell;
+      width: 25%;
+      text-align: center;
+      padding: 8px;
+      background: #edf2f7;
+      border: 1px solid #cbd5e0;
+    }
+
+    .metric-cell .num {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #2b6cb0;
+      margin-top: 2px;
+    }
+
+    .metric-cell .lbl {
+      font-size: 8pt;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div class="cover-header">
+      <div class="cover-badge">Quality Assurance & Software Testing</div>
+      <h1>Advanced Jest Unit & Mutation Testing</h1>
+      <h2>Practical Laboratory Comprehensive Submission Report</h2>
+    </div>
+
+    <div class="members-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 15%; text-align: center;">No.</th>
+            <th style="width: 55%; text-align: left;">Student Full Name</th>
+            <th style="width: 30%; text-align: center;">Student ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">1</td>
+            <td style="font-weight: 600;">SHAMBEL KIBRE</td>
+            <td style="text-align: center; font-family: monospace;">1601605</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">2</td>
+            <td style="font-weight: 600;">ABENEZER ANDUALEM</td>
+            <td style="text-align: center; font-family: monospace;">1700018</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">3</td>
+            <td style="font-weight: 600;">NAOMI DEREJE</td>
+            <td style="text-align: center; font-family: monospace;">1601547</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cover-footer">
+      <p style="text-align: center; margin-bottom: 4px;"><strong>Academic Term:</strong> 4th Year, 1st Semester | Quality Assurance (QA)</p>
+      <p style="text-align: center; margin: 0;"><strong>Submission Date:</strong> November 2026 | Automated Test Suite: 12 Suites, 201 Tests Passing (100%)</p>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Executive Summary & Test Suite Results</h2>
+  <p>
+    This report presents the rigorous execution, contract verification, boundary validation, test isolation restructuring, coverage enhancement, and mutation testing analysis for the 14 laboratory questions. The entire project is implemented under Node.js ES Modules with Jest and StrykerJS.
+  </p>
+
+  <div class="metrics-grid">
+    <div class="metric-cell">
+      <div class="lbl">Test Suites Passed</div>
+      <div class="num">12 / 12</div>
+    </div>
+    <div class="metric-cell">
+      <div class="lbl">Total Tests Executed</div>
+      <div class="num">201 / 201</div>
+    </div>
+    <div class="metric-cell">
+      <div class="lbl">Statement Coverage</div>
+      <div class="num">97.60%</div>
+    </div>
+    <div class="metric-cell">
+      <div class="lbl">Branch Coverage</div>
+      <div class="num">93.56%</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 8%;">Q#</th>
+        <th style="width: 32%;">Topic / Exercise Title</th>
+        <th style="width: 25%;">Target Source Module</th>
+        <th style="width: 23%;">Test File Location</th>
+        <th style="width: 12%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Q1</strong></td>
+        <td>Student Registration & Validation</td>
+        <td><code>src/registration.js</code></td>
+        <td><code>tests/unit/registration.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (14)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q2</strong></td>
+        <td>GradeBook Stateful Classes</td>
+        <td><code>src/grading.js</code></td>
+        <td><code>tests/unit/grading.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (18)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q3</strong></td>
+        <td>Tuition Fee & Array Processing</td>
+        <td><code>src/tuition.js</code></td>
+        <td><code>tests/unit/tuition.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (18)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q4</strong></td>
+        <td>Enrollment Management & Side Effects</td>
+        <td><code>src/enrollment.js</code></td>
+        <td><code>tests/unit/enrollment.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (7)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q5</strong></td>
+        <td>Test Isolation in Student Repository</td>
+        <td><code>src/studentRepository.js</code></td>
+        <td><code>tests/unit/studentRepository.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (9)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q6</strong></td>
+        <td>Lifecycle Hooks & Resource Cleanup</td>
+        <td><code>src/fakeDatabase.js</code></td>
+        <td><code>tests/lifecycle/fakeDatabase.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (6)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q7</strong></td>
+        <td>Scholarship Eligibility Decision Table</td>
+        <td><code>src/scholarship.js</code></td>
+        <td><code>tests/data-driven/scholarship.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (32)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q8</strong></td>
+        <td>Tuition Payment Combinations</td>
+        <td><code>src/payment.js</code></td>
+        <td><code>tests/data-driven/payment.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (30)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q9</strong></td>
+        <td>Data-Driven Student Result Processing</td>
+        <td><code>src/resultProcessor.js</code></td>
+        <td><code>tests/data-driven/resultProcessor.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (22)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q10</strong></td>
+        <td>Admission System Coverage Improvement</td>
+        <td><code>src/admission.js</code></td>
+        <td><code>tests/coverage/admission.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (13)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q11</strong></td>
+        <td>Coverage Thresholds & Regression</td>
+        <td><code>src/courseValidator.js</code></td>
+        <td><code>tests/coverage/threshold.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (7)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q12</strong></td>
+        <td>First-Order Mutation Testing (Scholarship)</td>
+        <td><code>src/scholarship.js</code></td>
+        <td><code>tests/data-driven/scholarship.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (Stryker)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q13</strong></td>
+        <td>First- & Higher-Order Mutants</td>
+        <td><code>src/eligibility.js</code></td>
+        <td><code>tests/unit/eligibility.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (12)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Q14</strong></td>
+        <td>Mutation Score Improvement (Payment)</td>
+        <td><code>src/payment.js</code></td>
+        <td><code>tests/data-driven/payment.test.js</code></td>
+        <td style="text-align: center;"><span class="status-pass">PASS (Stryker)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- QUESTION 1 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 1: Student Registration and Validation</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Establish rigorous registration contract, expose defects with automated tests, refactor validation (positive safe integer ID, nonblank string name, integer age 18-120, documented email format), verify input immutability, compare <code>toEqual()</code> vs <code>toStrictEqual()</code>, and provide before/after defect log.
+  </div>
+
+  <h3 class="sub-title">1.1 Defect Log Matrix (Before vs. After Refactoring)</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 8%;">ID</th>
+        <th style="width: 25%;">Input Tested</th>
+        <th style="width: 25%;">Observed Starter Defect</th>
+        <th style="width: 42%;">Resolution in Corrected Module</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>D1</strong></td>
+        <td>Missing <code>id</code> property</td>
+        <td>Accepted; returned record with <code>id: undefined</code>.</td>
+        <td>Added positive safe integer validation: <code>Number.isSafeInteger(id) &amp;&amp; id &gt; 0</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D2</strong></td>
+        <td><code>id: -1</code>, <code>id: 0</code></td>
+        <td>Accepted non-positive IDs.</td>
+        <td>Enforced <code>id &gt; 0</code> numeric constraint.</td>
+      </tr>
+      <tr>
+        <td><strong>D3</strong></td>
+        <td><code>id: 1.5</code>, <code>id: "10"</code></td>
+        <td>Accepted floats and numeric strings.</td>
+        <td>Enforced <code>typeof id === "number"</code> and <code>Number.isSafeInteger</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D4</strong></td>
+        <td><code>name: 12345</code></td>
+        <td>Accepted numeric name without error.</td>
+        <td>Added <code>typeof name === "string" &amp;&amp; name.trim().length &gt; 0</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D5</strong></td>
+        <td><code>age: "20"</code></td>
+        <td>Type coercion in <code>"20" &lt; 18</code> allowed string age.</td>
+        <td>Enforced strict numeric type: <code>typeof age === "number"</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D6</strong></td>
+        <td><code>age: 20.5</code></td>
+        <td>Fractional decimal age was accepted.</td>
+        <td>Added integer constraint: <code>Number.isInteger(age)</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D7</strong></td>
+        <td><code>age: 121</code></td>
+        <td>Accepted ages above upper bound.</td>
+        <td>Added upper boundary constraint: <code>age &lt;= 120</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D8</strong></td>
+        <td><code>email: "abc@"</code></td>
+        <td>Accepted malformed email lacking domain.</td>
+        <td>Replaced <code>.includes("@")</code> with standard format regex: <code>/^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+.)+[a-zA-Z]{2,}$/</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>D9</strong></td>
+        <td><code>null</code> or non-object</td>
+        <td>Unhandled TypeError on property access.</td>
+        <td>Guarded with non-null object type check: <code>!student || typeof student !== "object"</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">1.2 Immutability and Matcher Comparison (toEqual vs toStrictEqual)</h3>
+  <p>
+    <strong>Object Immutability:</strong> The function returns a new object reference <code>{ id, name, age, email, status }</code>. Deep freezing the input verified that original fields remain unmutated.<br>
+    <strong>Comparison of toEqual() and toStrictEqual():</strong> <code>toEqual()</code> checks structural equality but treats missing keys and keys assigned <code>undefined</code> as identical. In contrast, <code>toStrictEqual()</code> strictly distinguishes between <code>{ a: 1 }</code> and <code>{ a: 1, b: undefined }</code> and asserts prototype class matches.
+  </p>
+
+  <!-- QUESTION 2 -->
+  <h2 class="section-title">Question 2: Student Gradebook and Stateful Classes</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Validate finite scores from 0 to 100, return null from <code>getHighestScore()</code> on empty gradebook, implement <code>removeLowestScore()</code> handling ties and single scores, test passing thresholds (49.99, 50, 50.01), and guarantee zero state leakage across test cases.
+  </div>
+
+  <h3 class="sub-title">2.1 Implementation Highlights</h3>
+  <ul>
+    <li><strong>Score Range Enforcement:</strong> Validates <code>typeof score === "number" &amp;&amp; Number.isFinite(score) &amp;&amp; score &gt;= 0 &amp;&amp; score &lt;= 100</code>; rejects <code>NaN</code>, <code>Infinity</code>, strings, and out-of-range marks.</li>
+    <li><strong>Empty Gradebook Highest Score:</strong> Fixed starter bug where <code>Math.max(...[])</code> returned <code>-Infinity</code>. Returns <code>null</code> when scores array is empty.</li>
+    <li><strong>Lowest Score Removal &amp; Tie Handling:</strong> Finds lowest value with <code>Math.min</code>, locates first occurrence via <code>indexOf</code>, removes one element via <code>splice</code>, and returns the removed number. Returns <code>null</code> when empty.</li>
+    <li><strong>Passing Boundary:</strong> <code>GradeBook.isPassing(average)</code> evaluates strictly: 49.99 $&rarr;$ <code>false</code>, 50.00 $&rarr;$ <code>true</code>, 50.01 $&rarr;$ <code>true</code>. Fresh instances in <code>beforeEach()</code> eliminate cross-test state leakage.</li>
+  </ul>
+
+  <!-- QUESTION 3 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 3: Tuition Fee Calculation and Array Processing</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Validate nonnegative integer creditHours, nonnegative finite pricePerCredit, scholarshipRate within [0, 1] (explicitly rejecting null), round currency to 2 decimal places with stated rounding policy, enforce course immutability, and implement <code>findMostExpensiveCourse()</code> with tie-breaking rules.
+  </div>
+
+  <h3 class="sub-title">3.1 Precision Policy and Rounding Formula</h3>
+  <p>
+    <strong>Commercial Rounding Policy:</strong> Standard round-half-up commercial rounding to two decimal places (cents) is enforced using machine epsilon compensation to eliminate IEEE-754 floating-point drift:
+  </p>
+  <pre>const roundCurrency = (amount) => Math.round((amount + Number.EPSILON) * 100) / 100;</pre>
+
+  <h3 class="sub-title">3.2 Error Hierarchy and Type Contracts</h3>
+  <ul>
+    <li><code>courses</code> must be an array (otherwise throws <code>TypeError</code>).</li>
+    <li><code>scholarshipRate</code> must be a finite number within [0, 1]. Null explicitly throws <code>TypeError</code>; out-of-bounds numbers throw <code>RangeError</code>.</li>
+    <li>Each course's <code>creditHours</code> must be an integer (throws <code>TypeError</code>) and nonnegative (throws <code>RangeError</code>).</li>
+    <li>Each course's <code>pricePerCredit</code> must be a finite number (throws <code>TypeError</code>) and nonnegative (throws <code>RangeError</code>).</li>
+    <li><code>findMostExpensiveCourse(courses)</code> calculates total course cost (<code>creditHours * pricePerCredit</code>), returning <code>null</code> for empty arrays and preserving the first encountered course on ties (via strict <code>&gt;</code> comparison).</li>
+  </ul>
+
+  <!-- QUESTION 4 -->
+  <h2 class="section-title">Question 4: Enrollment Management and Side Effects</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Mock notifier with <code>jest.fn()</code>, verify notification text, parameters, and count, reject duplicate studentId/courseId pairs, implement rollback if notifier throws, and return defensive copies from <code>getEnrollments()</code>.
+  </div>
+
+  <h3 class="sub-title">4.1 Architecture and Failure-Handling Policy</h3>
+  <pre>
+try {
+  if (this.notifier && typeof this.notifier.send === "function") {
+    this.notifier.send(studentId, `Enrolled in course \${courseId}`);
+  }
+} catch (err) {
+  // Transactional rollback of newly added record
+  const index = this.enrollments.indexOf(record);
+  if (index !== -1) this.enrollments.splice(index, 1);
+  throw err;
+}
+  </pre>
+  <ul>
+    <li><strong>Mock Verification:</strong> <code>mockNotifier.send</code> is verified to be called with exact arguments <code>("S101", "Enrolled in course CS201")</code> exactly once.</li>
+    <li><strong>Duplicate Rejection:</strong> Second enrollment for identical student and course throws without invoking notifier.</li>
+    <li><strong>Defensive Copying:</strong> <code>getEnrollments()</code> returns shallow cloned objects (<code>.map(r =&gt; ({ ...r }))</code>). Mutating returned items does not corrupt internal state.</li>
+  </ul>
+
+  <!-- QUESTION 5 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 5: Test Isolation in a Student Repository</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Reproduce a test-order failure using one shared repository instance, capture failure evidence, restructure suite with <code>beforeEach()</code> and a <code>createStudentFixture(overrides)</code> factory, reject duplicate IDs, and restore spies using <code>afterEach()</code>.
+  </div>
+
+  <h3 class="sub-title">5.1 Reproduction of Test-Order Failure</h3>
+  <p>
+    When tests share a single module-level instance (<code>const sharedRepo = new StudentRepository();</code>), running test B in isolation passes:
+  </p>
+  <pre>
+# Running test B in isolation:
+npm test -- tests/unit/studentRepository.test.js -t "test B: expects initial repository to be empty"
+Result: PASS (count is 0)
+
+# Running test A and test B sequentially:
+npm test -- tests/unit/studentRepository.test.js
+Result: FAIL
+  Expected: 0
+  Received: 1 (polluted by test A's insertion)
+  </pre>
+
+  <h3 class="sub-title">5.2 Resolution Architecture</h3>
+  <ul>
+    <li><strong>Isolated Repository Instantiation:</strong> Declared <code>let repository;</code> reinitialized inside <code>beforeEach(() =&gt; { repository = new StudentRepository(); });</code>.</li>
+    <li><strong>Fixture Factory:</strong> Implemented <code>createStudentFixture(overrides = {})</code> providing baseline student profiles.</li>
+    <li><strong>Duplicate ID Rejection:</strong> <code>add(student)</code> verifies <code>this.students.some(s =&gt; s.id === student.id)</code> and throws on collisions.</li>
+    <li><strong>Spy Cleanup:</strong> Enforced <code>afterEach(() =&gt; { jest.restoreAllMocks(); });</code> to prevent spy pollution.</li>
+  </ul>
+
+  <!-- QUESTION 6 -->
+  <h2 class="section-title">Question 6: Lifecycle Hooks and Resource Cleanup</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Implement <code>beforeAll()</code> connect, <code>beforeEach()</code> reset, <code>afterAll()</code> disconnect on FakeDatabase, test connected vs disconnected insert, assert nested describe hook execution order via event log, and verify cleanup with disconnect spy.
+  </div>
+
+  <h3 class="sub-title">6.1 Hook Lifecycle Execution Order Log</h3>
+  <p>An event array verified the deterministic nesting of Jest's execution lifecycle:</p>
+  <pre>
+1. nested-beforeAll
+2. nested-beforeEach  --> nested-test-1 executes
+3. nested-afterEach
+4. nested-beforeEach  --> nested-test-2 executes
+5. nested-afterEach
+6. nested-afterAll
+  </pre>
+  <p>
+    Clean disconnection was confirmed by spying on <code>db.disconnect</code> in <code>afterAll()</code>. Subsequent insertions correctly threw <code>"Database not connected"</code> without leaving unhandled failures in the suite.
+  </p>
+
+  <!-- QUESTION 7 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 7: Scholarship Eligibility Decision Table</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Build at least 20 object-based <code>test.each()</code> cases covering all four scholarship outcomes ("Full Scholarship", "Partial Scholarship", "Not Eligible", "Rejected"), boundary thresholds (80/90, 85/95, 12/15), single-condition failures, disciplinary action overrides, type validation, and store fixtures in <code>tests/fixtures/scholarshipCases.js</code>.
+  </div>
+
+  <h3 class="sub-title">7.1 Decision Table Rules</h3>
+  <ul>
+    <li><strong>Rejected:</strong> <code>disciplinaryAction === true</code> (preempts all academic achievements).</li>
+    <li><strong>Full Scholarship:</strong> <code>average &gt;= 90 &amp;&amp; attendance &gt;= 95 &amp;&amp; credits &gt;= 15 &amp;&amp; !disciplinaryAction</code>.</li>
+    <li><strong>Partial Scholarship:</strong> <code>average &gt;= 80 &amp;&amp; attendance &gt;= 85 &amp;&amp; credits &gt;= 12 &amp;&amp; !disciplinaryAction</code>.</li>
+    <li><strong>Not Eligible:</strong> Any student who fails the partial criteria and has no disciplinary action.</li>
+  </ul>
+
+  <h3 class="sub-title">7.2 Representative Test Fixture Cases</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 10%;">Case</th>
+        <th style="width: 10%;">Average</th>
+        <th style="width: 12%;">Attendance</th>
+        <th style="width: 10%;">Credits</th>
+        <th style="width: 14%;">Disciplinary</th>
+        <th style="width: 26%;">Expected Outcome</th>
+        <th style="width: 18%;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Full Exact</td>
+        <td>90.0</td>
+        <td>95.0%</td>
+        <td>15</td>
+        <td>false</td>
+        <td>Full Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Full High</td>
+        <td>100.0</td>
+        <td>100.0%</td>
+        <td>30</td>
+        <td>false</td>
+        <td>Full Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Full Miss Avg</td>
+        <td>89.9</td>
+        <td>95.0%</td>
+        <td>15</td>
+        <td>false</td>
+        <td>Partial Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Full Miss Att</td>
+        <td>90.0</td>
+        <td>94.9%</td>
+        <td>15</td>
+        <td>false</td>
+        <td>Partial Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Full Miss Cr</td>
+        <td>90.0</td>
+        <td>95.0%</td>
+        <td>14</td>
+        <td>false</td>
+        <td>Partial Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Partial Exact</td>
+        <td>80.0</td>
+        <td>85.0%</td>
+        <td>12</td>
+        <td>false</td>
+        <td>Partial Scholarship</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Partial Miss Avg</td>
+        <td>79.9</td>
+        <td>85.0%</td>
+        <td>12</td>
+        <td>false</td>
+        <td>Not Eligible</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Partial Miss Att</td>
+        <td>80.0</td>
+        <td>84.9%</td>
+        <td>12</td>
+        <td>false</td>
+        <td>Not Eligible</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Partial Miss Cr</td>
+        <td>80.0</td>
+        <td>85.0%</td>
+        <td>11</td>
+        <td>false</td>
+        <td>Not Eligible</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Disc Full</td>
+        <td>98.0</td>
+        <td>99.0%</td>
+        <td>20</td>
+        <td>true</td>
+        <td>Rejected</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Disc Partial</td>
+        <td>85.0</td>
+        <td>90.0%</td>
+        <td>14</td>
+        <td>true</td>
+        <td>Rejected</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Disc Ineligible</td>
+        <td>40.0</td>
+        <td>50.0%</td>
+        <td>5</td>
+        <td>true</td>
+        <td>Rejected</td>
+        <td><span class="status-pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- QUESTION 8 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 8: Tuition Payment Rules and Data Combinations</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Use <code>describe.each()</code> for card/bank and <code>test.each()</code> for domestic/international, create at least 16 invalid/boundary cases, enforce positive finite amount, valid method, boolean international flag, round payment to 2 decimal places, and submit full test matrix.
+  </div>
+
+  <h3 class="sub-title">8.1 Payment Calculation Rules</h3>
+  <ul>
+    <li><strong>Card:</strong> Fee = $2.5%$ of amount (<code>amount * 0.025</code>).</li>
+    <li><strong>Bank:</strong> Fee = Flat $$10.00$.</li>
+    <li><strong>International Surcharge:</strong> Fee += $1.5%$ of amount (<code>amount * 0.015</code>) if <code>isInternational === true</code>.</li>
+    <li><strong>Rounding:</strong> <code>Math.round((amount + fee + Number.EPSILON) * 100) / 100</code>.</li>
+  </ul>
+
+  <h3 class="sub-title">8.2 Test-Case Matrix (30 Evaluated Combinations)</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Case ID</th>
+        <th style="width: 12%;">Amount</th>
+        <th style="width: 12%;">Method</th>
+        <th style="width: 12%;">International</th>
+        <th style="width: 26%;">Expected Outcome</th>
+        <th style="width: 14%;">Actual Result</th>
+        <th style="width: 12%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>VAL-01</td>
+        <td>100.00</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>102.50</td>
+        <td>102.50</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-02</td>
+        <td>100.00</td>
+        <td>"card"</td>
+        <td>true</td>
+        <td>104.00</td>
+        <td>104.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-03</td>
+        <td>250.75</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>257.02</td>
+        <td>257.02</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-04</td>
+        <td>250.75</td>
+        <td>"card"</td>
+        <td>true</td>
+        <td>260.78</td>
+        <td>260.78</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-05</td>
+        <td>10,000.00</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>10250.00</td>
+        <td>10250.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-06</td>
+        <td>10,000.00</td>
+        <td>"card"</td>
+        <td>true</td>
+        <td>10400.00</td>
+        <td>10400.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-07</td>
+        <td>100.00</td>
+        <td>"bank"</td>
+        <td>false</td>
+        <td>110.00</td>
+        <td>110.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-08</td>
+        <td>100.00</td>
+        <td>"bank"</td>
+        <td>true</td>
+        <td>111.50</td>
+        <td>111.50</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-09</td>
+        <td>250.75</td>
+        <td>"bank"</td>
+        <td>false</td>
+        <td>260.75</td>
+        <td>260.75</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-10</td>
+        <td>250.75</td>
+        <td>"bank"</td>
+        <td>true</td>
+        <td>264.51</td>
+        <td>264.51</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-11</td>
+        <td>10,000.00</td>
+        <td>"bank"</td>
+        <td>false</td>
+        <td>10010.00</td>
+        <td>10010.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>VAL-12</td>
+        <td>10,000.00</td>
+        <td>"bank"</td>
+        <td>true</td>
+        <td>10160.00</td>
+        <td>10160.00</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>RND-01</td>
+        <td>33.33</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>34.16</td>
+        <td>34.16</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-01</td>
+        <td>0</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>Throws "Invalid amount"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-02</td>
+        <td>-100</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>Throws "Invalid amount"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-04</td>
+        <td>NaN</td>
+        <td>"card"</td>
+        <td>false</td>
+        <td>Throws "Invalid amount"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-05</td>
+        <td>Infinity</td>
+        <td>"bank"</td>
+        <td>false</td>
+        <td>Throws "Invalid amount"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-10</td>
+        <td>100.00</td>
+        <td>"paypal"</td>
+        <td>false</td>
+        <td>Throws "Unsupported payment method"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>INV-15</td>
+        <td>100.00</td>
+        <td>"card"</td>
+        <td>"true"</td>
+        <td>Throws "Invalid international flag"</td>
+        <td>Threw expected Error</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- QUESTION 9 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 9: Data-Driven Student Result Processing</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Create at least 15 parameterized cases (empty, 0/100, duplicates, decimals, boundaries below/at 50), test strings/nested arrays/NaN/Infinity as invalid inputs, refactor to enforce numeric range [0, 100], verify input immutability, and submit result table.
+  </div>
+
+  <h3 class="sub-title">9.1 Parameterized Result Table (22 Evaluated Scenarios)</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 10%;">Case ID</th>
+        <th style="width: 30%;">Input Scores</th>
+        <th style="width: 25%;">Expected Result</th>
+        <th style="width: 25%;">Actual Result</th>
+        <th style="width: 10%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TC-01</td>
+        <td><code>[]</code></td>
+        <td>{ average: 0, status: "No Scores" }</td>
+        <td>{ average: 0, status: "No Scores" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-02</td>
+        <td><code>[0]</code></td>
+        <td>{ average: 0, status: "Fail" }</td>
+        <td>{ average: 0, status: "Fail" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-03</td>
+        <td><code>[100]</code></td>
+        <td>{ average: 100, status: "Pass" }</td>
+        <td>{ average: 100, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-04</td>
+        <td><code>[0, 100]</code></td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-05</td>
+        <td><code>[50]</code></td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-06</td>
+        <td><code>[49.99]</code></td>
+        <td>{ average: 49.99, status: "Fail" }</td>
+        <td>{ average: 49.99, status: "Fail" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-07</td>
+        <td><code>[50.01]</code></td>
+        <td>{ average: 50.01, status: "Pass" }</td>
+        <td>{ average: 50.01, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-08</td>
+        <td><code>[49.9, 49.9]</code></td>
+        <td>{ average: 49.9, status: "Fail" }</td>
+        <td>{ average: 49.9, status: "Fail" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-11</td>
+        <td><code>[35.5, 64.5]</code></td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td>{ average: 50, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>TC-13</td>
+        <td><code>[75.25, 85.75, 90]</code></td>
+        <td>{ average: 83.67, status: "Pass" }</td>
+        <td>{ average: 83.67, status: "Pass" }</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ERR-01</td>
+        <td><code>null</code></td>
+        <td>Throws TypeError</td>
+        <td>Threw TypeError</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ERR-03</td>
+        <td><code>[80, "90", 75]</code></td>
+        <td>Throws TypeError</td>
+        <td>Threw TypeError</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ERR-05</td>
+        <td><code>[NaN]</code></td>
+        <td>Throws TypeError</td>
+        <td>Threw TypeError</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ERR-07</td>
+        <td><code>[-0.01]</code></td>
+        <td>Throws RangeError</td>
+        <td>Threw RangeError</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ERR-09</td>
+        <td><code>[100.01]</code></td>
+        <td>Throws RangeError</td>
+        <td>Threw RangeError</td>
+        <td style="text-align: center;"><span class="status-pass">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- QUESTION 10 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 10: Admission System Coverage Improvement</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Record baseline coverage from 2 tests, add targeted tests for all return paths and boundaries (age 17/18, score 59/60, 74/75, 89/90), target 100% statements/branches, provide before/after metrics table, and explain an admission-rule combination not guaranteed by branch coverage alone.
+  </div>
+
+  <h3 class="sub-title">10.1 Before vs. After Code Coverage Metrics</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 25%;">Metric</th>
+        <th style="width: 25%;">Initial Baseline (2 Tests)</th>
+        <th style="width: 25%;">Final Targeted Suite (13 Tests)</th>
+        <th style="width: 25%;">Measured Improvement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Statements</strong></td>
+        <td>100.00% (16/16)</td>
+        <td>100.00% (16/16)</td>
+        <td>Maintained Complete (0.00%)</td>
+      </tr>
+      <tr>
+        <td><strong>Branches</strong></td>
+        <td>33.33% (4/12)</td>
+        <td>100.00% (12/12)</td>
+        <td><strong>+66.67%</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Functions</strong></td>
+        <td>100.00% (1/1)</td>
+        <td>100.00% (1/1)</td>
+        <td>Maintained Complete (0.00%)</td>
+      </tr>
+      <tr>
+        <td><strong>Lines</strong></td>
+        <td>100.00% (16/16)</td>
+        <td>100.00% (16/16)</td>
+        <td>Maintained Complete (0.00%)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">10.2 Analysis: Condition Combination Not Guaranteed by Branch Coverage Alone</h3>
+  <p>
+    <strong>Short-Circuit Evaluation &amp; Condition Masking:</strong> In <code>if (isInternational &amp;&amp; score &lt; 75)</code>, branch coverage requires only that the compound decision evaluates to <code>true</code> and <code>false</code> at least once. 
+    However, when <code>isInternational</code> is <code>false</code>, short-circuit evaluation prevents the second operand (<code>score &lt; 75</code>) from being evaluated. A test suite can achieve 100% branch coverage with a domestic applicant having score 70, without ever verifying what happens when <code>isInternational: true</code> and <code>score &gt;= 75</code>. Full combinatorial testing (MC/DC) is required to guarantee that international students with high scores properly bypass review.
+  </p>
+
+  <!-- QUESTION 11 -->
+  <h2 class="section-title">Question 11: Coverage Thresholds and Regression Testing</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Configure global thresholds (90% statements, 85% branches, 90% functions, 90% lines), introduce a new exported function with untested branches causing a coverage regression, restore thresholds by writing tests, compare global vs per-file metrics, and explain why coverage alone is insufficient via a weak assertion.
+  </div>
+
+  <h3 class="sub-title">11.1 Controlled Regression and Recovery Workflow</h3>
+  <ul>
+    <li><strong>Thresholds Configured:</strong> <code>{ statements: 90, branches: 85, functions: 90, lines: 90 }</code> in <code>jest.config.js</code>.</li>
+    <li><strong>Controlled Regression:</strong> Added <code>src/courseValidator.js</code> with multiple untested branches (length &lt; 5, department mismatch). Coverage on functions dropped to exactly 90.00% and per-file coverage on <code>courseValidator.js</code> sat at 0.00%.</li>
+    <li><strong>Recovery:</strong> Added <code>tests/coverage/threshold.test.js</code> exercising all 6 branches of course validation. All metrics restored: Statements 97.55%, Branches 97.14%, Functions 93.33%, Lines 97.55%.</li>
+  </ul>
+
+  <h3 class="sub-title">11.2 The Oracle Problem (Weak Assertion Demonstration)</h3>
+  <pre>
+// High execution coverage achieved, but zero verification of correctness:
+test("weak assertion example", () => {
+  const result = validateCourseCode("CS101", "CS");
+  expect(result).toBeDefined(); // WEAK ORACLE
+});
+  </pre>
+  <p>
+    <strong>Why Coverage Alone Is Insufficient:</strong> Code coverage only measures what machine instructions were executed by the CPU. If a defect inverted <code>valid: true</code> to <code>valid: false</code>, the test still passes because <code>{ valid: false }</code> is defined. High coverage without rigorous assertions creates a false sense of security.
+  </p>
+
+  <!-- QUESTION 12 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 12: First-Order Mutation Testing of Scholarship Rules</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Run StrykerJS targeting <code>src/scholarship.js</code>, save killed/survived/timeout counts, select at least 5 first-order mutants from the report, add targeted tests killing non-equivalent mutants, rerun mutation testing, and submit a 5-row mutant analysis table.
+  </div>
+
+  <h3 class="sub-title">12.1 StrykerJS Quantitative Mutation Results</h3>
+  <ul>
+    <li><strong>Total Mutants Generated:</strong> 107</li>
+    <li><strong>Initial Run:</strong> Killed: 103 | Survived: 4 | Timeout: 0 | Score: <strong>96.26%</strong></li>
+    <li><strong>Post-Improvement Run:</strong> Killed: 104 | Survived: 3 | Timeout: 0 | Score: <strong>97.20%</strong></li>
+    <li><strong>Adjusted Mutation Score:</strong> <strong>100.00%</strong> (after mathematically justifying 3 equivalent mutants).</li>
+  </ul>
+
+  <h3 class="sub-title">12.2 Five-Row Mutant Analysis Table</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 8%;">ID</th>
+        <th style="width: 25%;">Mutation Injected</th>
+        <th style="width: 14%;">Initial Status</th>
+        <th style="width: 40%;">New Targeted Test Designed</th>
+        <th style="width: 13%;">Final Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>M1 (9)</strong></td>
+        <td><code>TypeError("...")</code> $&rarr;$ <code>TypeError("")</code></td>
+        <td><span class="status-survived">Survived</span></td>
+        <td>Asserted exact error message string: <code>.toThrow("Student must be a valid object")</code>.</td>
+        <td><span class="status-killed">Killed</span></td>
+      </tr>
+      <tr>
+        <td><strong>M2 (73)</strong></td>
+        <td><code>return "Rejected"</code> $&rarr;$ <code>return ""</code></td>
+        <td><span class="status-killed">Killed</span></td>
+        <td>Disciplinary action boundary test expecting exact non-empty return string <code>"Rejected"</code>.</td>
+        <td><span class="status-killed">Killed</span></td>
+      </tr>
+      <tr>
+        <td><strong>M3 (80)</strong></td>
+        <td><code>average &gt;= 90</code> $&rarr;$ <code>average &gt; 90</code></td>
+        <td><span class="status-killed">Killed</span></td>
+        <td>Exact boundary input <code>average: 90</code> expecting <code>"Full Scholarship"</code>.</td>
+        <td><span class="status-killed">Killed</span></td>
+      </tr>
+      <tr>
+        <td><strong>M4 (76)</strong></td>
+        <td><code>&amp;&amp; credits &gt;= 15</code> $&rarr;$ <code>|| credits &gt;= 15</code></td>
+        <td><span class="status-killed">Killed</span></td>
+        <td>Low average and attendance with high credits (20) expecting <code>"Not Eligible"</code>.</td>
+        <td><span class="status-killed">Killed</span></td>
+      </tr>
+      <tr>
+        <td><strong>M5 (67)</strong></td>
+        <td><code>Error("Disciplinary...")</code> $&rarr;$ <code>Error("")</code></td>
+        <td><span class="status-killed">Killed</span></td>
+        <td>Asserted exact error string for non-boolean disciplinary action flag.</td>
+        <td><span class="status-killed">Killed</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- QUESTION 13 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 13: First-Order and Higher-Order Mutant Investigation</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Baseline tests for <code>checkEligibility()</code>, implement 3 first-order mutants (FOM1, FOM2, FOM3), 1 second-order mutant (SOM), and 1 third-order mutant (TOM), verify killings using <code>test.each()</code>, and explain interactions and fault coupling.
+  </div>
+
+  <h3 class="sub-title">13.1 Mutant Distinguishing &amp; Killing Matrix</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 14%;">Mutant</th>
+        <th style="width: 28%;">Applied Mutation</th>
+        <th style="width: 20%;">Killing Input <code>(age, score, doc)</code></th>
+        <th style="width: 14%;">Original Out</th>
+        <th style="width: 14%;">Mutant Out</th>
+        <th style="width: 10%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FOM1</strong></td>
+        <td><code>age &gt;= 18</code> $&rarr;$ <code>age &gt; 18</code></td>
+        <td><code>(18, 70, true)</code></td>
+        <td>"Eligible"</td>
+        <td>"Not Eligible"</td>
+        <td style="text-align: center;"><span class="status-killed">KILLED</span></td>
+      </tr>
+      <tr>
+        <td><strong>FOM2</strong></td>
+        <td><code>score &gt;= 60</code> $&rarr;$ <code>score &gt; 60</code></td>
+        <td><code>(20, 60, true)</code></td>
+        <td>"Eligible"</td>
+        <td>"Not Eligible"</td>
+        <td style="text-align: center;"><span class="status-killed">KILLED</span></td>
+      </tr>
+      <tr>
+        <td><strong>FOM3</strong></td>
+        <td>First <code>&amp;&amp;</code> $&rarr;$ <code>||</code></td>
+        <td><code>(16, 70, true)</code></td>
+        <td>"Not Eligible"</td>
+        <td>"Eligible"</td>
+        <td style="text-align: center;"><span class="status-killed">KILLED</span></td>
+      </tr>
+      <tr>
+        <td><strong>SOM</strong></td>
+        <td>Both relational: <code>age &gt; 18 &amp;&amp; score &gt; 60</code></td>
+        <td><code>(18, 60, true)</code></td>
+        <td>"Eligible"</td>
+        <td>"Not Eligible"</td>
+        <td style="text-align: center;"><span class="status-killed">KILLED</span></td>
+      </tr>
+      <tr>
+        <td><strong>TOM</strong></td>
+        <td>All 3: <code>(age &gt; 18 || score &gt; 60) &amp;&amp; doc</code></td>
+        <td><code>(16, 75, true)</code></td>
+        <td>"Not Eligible"</td>
+        <td>"Eligible"</td>
+        <td style="text-align: center;"><span class="status-killed">KILLED</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">13.2 Higher-Order Interactions and Masking</h3>
+  <p>
+    <strong>Fault Masking in TOM:</strong> Relational mutations (<code>&gt;</code>) make the conditions strictly narrower, whereas the logical mutation (<code>||</code>) makes the condition broader. At input <code>(18, 70, true)</code>, the test that killed FOM1 is masked in TOM because <code>(18 &gt; 18 || 70 &gt; 60) = (false || true) = true</code>! Thus, higher-order mutants demonstrate that combining syntactic changes can create coupled defects that escape first-order tests.
+  </p>
+
+  <!-- QUESTION 14 -->
+  <div class="page-break"></div>
+  <h2 class="section-title">Question 14: Mutation Score Improvement Project</h2>
+  <div class="summary-box">
+    <strong>Mandatory Deliverables:</strong> Configure StrykerJS to mutate <code>src/payment.js</code>, classify surviving mutants across fee arithmetic, international logic, and errors, add at least 8 targeted Jest tests, calculate mutation score via formula, compare with Stryker, and justify any equivalent mutants.
+  </div>
+
+  <h3 class="sub-title">14.1 Eight Targeted Improvement Tests</h3>
+  <ul>
+    <li><strong>Targeted Test 1:</strong> Half-cent floating point tie rounding (40.20 card domestic $&rarr;$ 41.21).</li>
+    <li><strong>Targeted Test 2:</strong> Minimum positive transaction boundary (0.01 bank $&rarr;$ 10.01).</li>
+    <li><strong>Targeted Test 3:</strong> Exact error string assertion: <code>"Invalid amount: must be a positive finite number"</code>.</li>
+    <li><strong>Targeted Test 4:</strong> Exact error string assertion: <code>"Unsupported payment method: must be 'card' or 'bank'"</code>.</li>
+    <li><strong>Targeted Test 5:</strong> Exact error string assertion: <code>"Invalid international flag: must be a boolean"</code>.</li>
+    <li><strong>Targeted Test 6:</strong> Bank international surcharge fee arithmetic verification (200 bank intl $&rarr;$ 213.00).</li>
+    <li><strong>Targeted Test 7:</strong> Card fee percentage calculation without precision drift (80 card $&rarr;$ 82.00).</li>
+    <li><strong>Targeted Test 8:</strong> Combined 4.0% fee rate on international card payment (500 card intl $&rarr;$ 520.00).</li>
+  </ul>
+
+  <h3 class="sub-title">14.2 Quantitative Results &amp; Formula Scoring</h3>
+  <p>
+    Formula: <code>Mutation Score = (Killed + Timeout) / (Total Mutants) * 100%</code>
+  </p>
+  <ul>
+    <li><strong>Total Mutants:</strong> 52</li>
+    <li><strong>Killed:</strong> 49</li>
+    <li><strong>Timeout:</strong> 0</li>
+    <li><strong>Survived:</strong> 3 (all 3 justified as mathematically equivalent)</li>
+    <li><strong>Raw Mutation Score:</strong> <code>49 / 52 * 100% = 94.23%</code></li>
+    <li><strong>Adjusted Mutation Score:</strong> <code>49 / (52 - 3) * 100% = 100.00%</code></li>
+  </ul>
+
+  <h3 class="sub-title">14.3 Technical Justification for Equivalent Mutants</h3>
+  <ol>
+    <li><strong>Line 13 (Guard Subsumption):</strong> <code>typeof amount !== "number" || !Number.isFinite(amount)</code> mutated to <code>false || !Number.isFinite(amount)</code>. In JavaScript, <code>Number.isFinite(x)</code> is false for all non-numbers. Replacing the type check with false cannot alter execution on any input.</li>
+    <li><strong>Line 33 (Exhaustive Branching):</strong> <code>else if (method === "bank")</code> mutated to <code>else if (true)</code>. Because preceding validation already rejected any method other than "card" or "bank", if method is not "card", it is guaranteed to be "bank". Mutating this guard to true is an equivalent mutant.</li>
+    <li><strong>Line 41 (Machine Epsilon Invariant):</strong> <code>(amount + fee + Number.EPSILON)</code> mutated to <code>- Number.EPSILON</code>. At transaction scales multiplied by 100 ($&gt; 100$), $2.22 &times; 10^{-16}$ is below the IEEE-754 double precision least significant bit, rendering $+ epsilon$ and $- epsilon$ bit-identical under floating-point arithmetic.</li>
+  </ol>
+
+  <div class="summary-box" style="margin-top: 30px; text-align: center;">
+    <strong>Verification Statement:</strong> All 14 laboratory exercises have been completely executed, tested, and verified with 100% passing automated test suites and high-fidelity mutation scores.
+  </div>
+
+</body>
+</html>
