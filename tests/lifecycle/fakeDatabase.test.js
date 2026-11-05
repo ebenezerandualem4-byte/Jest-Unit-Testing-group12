@@ -1,6 +1,5 @@
 import { jest } from "@jest/globals";
 import { FakeDatabase } from "../../src/fakeDatabase.js";
-
 describe("Question 6: Lifecycle Hooks and Resource Cleanup", () => {
   let db;
   let disconnectSpy;
