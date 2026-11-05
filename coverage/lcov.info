@@ -1,5 +1,5 @@
 TN:
-SF:src\admission.js
+SF:src/admission.js
 FN:6,evaluateAdmission
 FNF:1
 FNH:1
@@ -42,7 +42,7 @@ BRF:15
 BRH:15
 end_of_record
 TN:
-SF:src\courseValidator.js
+SF:src/courseValidator.js
 FN:6,validateCourseCode
 FNF:1
 FNH:1
@@ -83,7 +83,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:src\eligibility.js
+SF:src/eligibility.js
 FN:10,checkEligibility
 FN:18,checkEligibilityFOM1
 FN:26,checkEligibilityFOM2
@@ -180,7 +180,7 @@ BRF:23
 BRH:14
 end_of_record
 TN:
-SF:src\enrollment.js
+SF:src/enrollment.js
 FN:7,EnrollmentManager
 FN:17,enroll
 FN:54,unenroll
@@ -287,7 +287,7 @@ BRF:17
 BRH:16
 end_of_record
 TN:
-SF:src\fakeDatabase.js
+SF:src/fakeDatabase.js
 FN:7,FakeDatabase
 FN:12,connect
 FN:16,insert
@@ -344,7 +344,7 @@ BRF:7
 BRH:7
 end_of_record
 TN:
-SF:src\grading.js
+SF:src/grading.js
 FN:7,GradeBook
 FN:19,addScore
 FN:29,getAverage
@@ -452,7 +452,7 @@ BRF:23
 BRH:22
 end_of_record
 TN:
-SF:src\payment.js
+SF:src/payment.js
 FN:10,processPayment
 FNF:1
 FNH:1
@@ -522,7 +522,7 @@ BRF:16
 BRH:16
 end_of_record
 TN:
-SF:src\registration.js
+SF:src/registration.js
 FN:18,registerStudent
 FNF:1
 FNH:1
@@ -615,7 +615,7 @@ BRF:21
 BRH:21
 end_of_record
 TN:
-SF:src\resultProcessor.js
+SF:src/resultProcessor.js
 FN:21,processResult
 FNF:1
 FNH:1
@@ -688,7 +688,7 @@ BRF:16
 BRH:16
 end_of_record
 TN:
-SF:src\scholarship.js
+SF:src/scholarship.js
 FN:6,evaluateScholarship
 FNF:1
 FNH:1
@@ -776,7 +776,7 @@ BRF:31
 BRH:31
 end_of_record
 TN:
-SF:src\studentRepository.js
+SF:src/studentRepository.js
 FN:7,StudentRepository
 FN:15,add
 FN:30,findById
@@ -869,7 +869,7 @@ BRF:16
 BRH:16
 end_of_record
 TN:
-SF:src\tuition.js
+SF:src/tuition.js
 FN:10,roundCurrency
 FN:21,calculateTuition
 FN:82,findMostExpensiveCourse
